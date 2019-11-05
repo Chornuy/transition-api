@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  service_db:
+    image: "postgres"
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123321
+      - POSTGRES_DB=transition_api_db
+    ports: 
+      - "172.16.100.1:5432:5432"
+    networks:
+      - transition_network
+    volumes:
+        - 'service_db:/var/lib/postgresql'
+
+  rabbit_mq:
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: SWQOKODSQALRPCLNMEQG
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+      RABBITMQ_DEFAULT_VHOST: rabbitmq
+    ports:
+      - '172.16.100.1:15672:15672'
+      - '172.16.100.1:5672:5672'
+    networks:
+      - transition_network
+
+networks:
+  transition_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.100.0/24
+
+volumes:
+  service_db:
+    driver: local

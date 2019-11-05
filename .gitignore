@@ -1,0 +1,6 @@
+venv/
+.tox/
+.vscode/
+.idea/
+
+__pycache__/
